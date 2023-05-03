@@ -1,7 +1,6 @@
 name: Java Release CI
 
 on: [release]
-types: [created]
 
 jobs:
   build:
