@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.ICS</groupId>
-	<artifactId>ImageClassifier-1</artifactId>
+	<artifactId>ImageClassifier</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>ImageClassifier</name>
 	<description>Image classifier that provides tags based on image URL.</description>
@@ -41,7 +41,7 @@
 		<repository>
 			<id>github</id>
 			<name>GitHub Packages</name>
-			<url>https://maven.pkg.github.com/MariaIvanova01/ICS</url>
+			<url>https://github.com/MariaIvanova01/ICS</url>
 		</repository>
 	</distributionManagement>
 </project>
