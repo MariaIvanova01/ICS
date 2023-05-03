@@ -17,3 +17,5 @@ jobs:
         run: mvn --batch-mode --update-snapshots package
       - name: Build without tests
         run: mvn -DskipTests package
+      - name: Build with tests
+        run: mvn --batch-mode --update-snapshots verify
