@@ -14,9 +14,13 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       - name: Build with Maven
+
         runs:
         using: "composite"
         steps:
-           - run: mvn --batch-mode --update-snapshots package
-           - run: mvn --batch-mode --file pom.xml
-           - run: mvn --batch-mode --update-snapshots verify
+            - run: mvn --batch-mode --update-snapshots package
+              shell: bash
+            - run: mvn --batch-mode --file pom.xml
+              shell: bash
+            - run: mvn --batch-mode --update-snapshots verify
+              shell: bash
