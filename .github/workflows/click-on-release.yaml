@@ -1,6 +1,7 @@
 name: Java CI
 
 on: [release]
+types: [created]
 
 jobs:
   build:
@@ -19,3 +20,5 @@ jobs:
         run: mvn -DskipTests package
       - name: Build with tests
         run: mvn --batch-mode --update-snapshots verify
+      - name: Package Java Project as JAR
+        run: mvn package
