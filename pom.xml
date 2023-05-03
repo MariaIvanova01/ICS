@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.ICS</groupId>
-	<artifactId>ImageClassifier</artifactId>
+	<artifactId>ImageClassifier-1</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>ImageClassifier</name>
 	<description>Image classifier that provides tags based on image URL.</description>
