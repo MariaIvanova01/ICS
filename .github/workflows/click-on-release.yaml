@@ -1,4 +1,4 @@
-name: Java Release CI
+name: JavaReleace CI
 
 on: [release]
 
