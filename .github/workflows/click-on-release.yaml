@@ -22,3 +22,7 @@ jobs:
         run: mvn --batch-mode --update-snapshots verify
       - name: Package Java Project as JAR
         run: mvn package
+      - name: Publish JAR to Packages page
+        run: mvn --batch-mode deploy
+        env:
+          GITHUB_TOKEN:  ${{ secrets.MY_WAY_ICS }}
