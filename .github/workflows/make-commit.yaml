@@ -18,6 +18,11 @@ jobs:
       - name: Build without tests
         run: mvn -DskipTests package
       - name: Jacoco
-        run: mvn jacoco:merge package jacoco:report verify -DskipTests=true
+        run: mvn clean verify
+      - name: Archive Jacoco reports
+        uses: actions/upload-artifact@v3
+        with:
+            name: jacoco-reports
+            path: test-coverage/target/site/jacoco-aggregate
       - name: Build with tests
         run: mvn --batch-mode --update-snapshots verify
