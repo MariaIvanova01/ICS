@@ -17,5 +17,7 @@ jobs:
         run: mvn --batch-mode --update-snapshots package
       - name: Build without tests
         run: mvn -DskipTests package
+      - name: Jacoco
+        run: mvn jacoco:merge package jacoco:report verify -DskipTests=true
       - name: Build with tests
         run: mvn --batch-mode --update-snapshots verify
