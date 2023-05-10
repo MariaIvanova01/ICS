@@ -9,12 +9,18 @@ public class ImageController {
     //TODO Implement Post Method for v1/image (my API that receives the image URL for specific user)
 
     @PostMapping("/rest/getImageURL")
-    public Image createImage(@RequestBody String imageURL) {
+    public Image createImage(@RequestBody String imageURL) throws Exception {
         //TODO Save Image to Database (additionally in user session)
-        return  Image.builder()
-                .imageURL(imageURL)
-                .tags(ImageClassificationWrapper.classifyImage(imageURL))
-                .build();
+        try {
+            return  Image.builder()
+                    .imageURL(imageURL)
+                    .tags(ImageClassificationWrapper.classifyImage(imageURL))
+                    .build();
+        }catch (Exception e){
+            throw new Exception("Image classification failed due to third party service being unreachable");
+        }
+
+
     }
 
 
