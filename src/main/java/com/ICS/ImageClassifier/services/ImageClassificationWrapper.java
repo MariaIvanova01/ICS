@@ -1,14 +1,18 @@
 package com.ICS.ImageClassifier.services;
 
+import com.ICS.ImageClassifier.exceptions.ApiException;
 import com.clarifai.channel.ClarifaiChannel;
 import com.clarifai.credentials.ClarifaiCallCredentials;
 import com.clarifai.grpc.api.*;
 import com.clarifai.grpc.api.status.StatusCode;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ImageClassificationWrapper {
+
+    private ApiException apiException;
     //TODO Implement method to access the third-party API passing ImageURL and handling the response (text manipulation)
 
     public static List<String> classifyImage(String imageURL){
@@ -31,7 +35,7 @@ public class ImageClassificationWrapper {
         );
 
         if (response.getStatus().getCode() != StatusCode.SUCCESS) {
-            throw new RuntimeException("Request failed, status: " + response.getStatus());
+            throw new IllegalArgumentException("Request failed, status: " + response.getStatus());
         }
 
         List<String> tags = new ArrayList<>();
