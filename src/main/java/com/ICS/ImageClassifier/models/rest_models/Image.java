@@ -1,4 +1,4 @@
-package com.ICS.ImageClassifier.models;
+package com.ICS.ImageClassifier.models.rest_models;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,6 +15,6 @@ public class Image {
 
     private String imageURL;
 
-    private List<String> tags;
+    private List<Tags> tags;
 
 }

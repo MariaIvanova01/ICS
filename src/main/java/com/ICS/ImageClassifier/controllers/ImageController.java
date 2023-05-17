@@ -1,7 +1,7 @@
 package com.ICS.ImageClassifier.controllers;
 
 import com.ICS.ImageClassifier.exceptions.ApiException;
-import com.ICS.ImageClassifier.models.Image;
+import com.ICS.ImageClassifier.models.rest_models.Image;
 import com.ICS.ImageClassifier.services.ImageClassificationWrapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 @RestController
 public class ImageController {
-    //TODO Implement Post Method for v1/image (my API that receives the image URL for specific user)
+    //TODO Implement Post Method for v1/image (my API that receives the image URL)
 
     @PostMapping("/rest/getImageURL")
     public ResponseEntity createImage(@RequestBody String imageURL)  {

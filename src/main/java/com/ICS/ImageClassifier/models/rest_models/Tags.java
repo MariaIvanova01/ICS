@@ -1,4 +1,4 @@
-package com.ICS.ImageClassifier.models;
+package com.ICS.ImageClassifier.models.rest_models;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,11 +9,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @Builder
-public class User {
+public class Tags {
+    private String tagName;
+    private float tagAccuracy;
 
-    public String username;
-
-    public String email;
-
-    public String password;
 }

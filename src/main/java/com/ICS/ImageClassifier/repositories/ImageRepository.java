@@ -1,11 +1,10 @@
 package com.ICS.ImageClassifier.repositories;
 
-public interface ImageRepository {
-    //TODO Implement addImage logic for database
+import com.ICS.ImageClassifier.models.entities.ImageEntity;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-    //TODO Implement getImage by Id from database
-
-    //TODO Implement editImage by Id from database
-
-    //TODO Implement removeImage by Id from database
+@Repository
+public interface ImageRepository extends CrudRepository<ImageEntity, String> {
+    ImageEntity getImageEntityByImageUrl(String imageUrl);
 }
