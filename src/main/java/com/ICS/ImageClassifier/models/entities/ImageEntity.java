@@ -1,7 +1,6 @@
 package com.ICS.ImageClassifier.models.entities;
 
 import jakarta.persistence.*;
-
 import java.sql.Date;
 import java.util.List;
 

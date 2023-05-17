@@ -1,13 +1,16 @@
 package com.ICS.ImageClassifier.controllers;
 
 import com.ICS.ImageClassifier.exceptions.ApiException;
-import com.ICS.ImageClassifier.models.rest_models.Image;
+import com.ICS.ImageClassifier.models.rest.models.Image;
+import com.ICS.ImageClassifier.models.rest.models.Tags;
+import com.ICS.ImageClassifier.models.service.models.TagsService;
 import com.ICS.ImageClassifier.services.ImageClassificationWrapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 public class ImageController {
@@ -17,10 +20,16 @@ public class ImageController {
     public ResponseEntity createImage(@RequestBody String imageURL)  {
         //TODO Save Image to Database (additionally in user session)
         try {
+            List<Tags> tags = ImageClassificationWrapper.classifyImage(imageURL).stream().map(tag ->
+                 Tags.builder()
+                        .tagName(tag.getTagName())
+                        .tagAccuracy(tag.getTagAccuracy())
+                        .build()
+            ).toList();
             return  new ResponseEntity(
                     Image.builder()
                         .imageURL(imageURL)
-                        .tags(ImageClassificationWrapper.classifyImage(imageURL))
+                        .tags(tags)
                         .build(),
                     HttpStatus.OK
             );

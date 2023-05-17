@@ -1,7 +1,7 @@
 package com.ICS.ImageClassifier.services;
 
 import com.ICS.ImageClassifier.exceptions.ApiException;
-import com.ICS.ImageClassifier.models.rest_models.Tags;
+import com.ICS.ImageClassifier.models.service.models.TagsService;
 import com.clarifai.channel.ClarifaiChannel;
 import com.clarifai.credentials.ClarifaiCallCredentials;
 import com.clarifai.grpc.api.*;
@@ -9,13 +9,14 @@ import com.clarifai.grpc.api.status.StatusCode;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ImageClassificationWrapper {
 
     private ApiException apiException;
     //TODO Implement method to access the third-party API passing ImageURL and handling the response (text manipulation)
 
-    public static List<Tags> classifyImage(String imageURL){
+    public static List<TagsService> classifyImage(String imageURL){
 
         V2Grpc.V2BlockingStub stub = V2Grpc.newBlockingStub(ClarifaiChannel.INSTANCE.getGrpcChannel())
                 .withCallCredentials(new ClarifaiCallCredentials("042439d583204f26901781c20cbf2194"));
@@ -38,13 +39,16 @@ public class ImageClassificationWrapper {
             throw new IllegalArgumentException("Request failed, status: " + response.getStatus());
         }
 
-        List<Tags> tags = new ArrayList<>();
+        List<TagsService> tags = new ArrayList<>();
+
         for (Concept concept : response.getOutputs(0).getData().getConceptsList()) {
-           tags.add(Tags
-                   .builder()
-                   .tagName(concept.getName())
-                   .tagAccuracy(concept.getValue())
-                   .build());
+            if (concept.getValue() >= 0.93) {
+                tags.add(TagsService
+                        .builder()
+                        .tagName(concept.getName())
+                        .tagAccuracy(concept.getValue())
+                        .build());
+            }
         }
         return tags;
     }

@@ -1,5 +1,6 @@
-package com.ICS.ImageClassifier.models.rest_models;
+package com.ICS.ImageClassifier.models.service.models;
 
+import com.ICS.ImageClassifier.models.rest.models.Tags;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +12,7 @@ import java.util.List;
 @Setter
 @Builder
 @AllArgsConstructor
-public class Image {
+public class ImageService {
 
     private String imageURL;
 
