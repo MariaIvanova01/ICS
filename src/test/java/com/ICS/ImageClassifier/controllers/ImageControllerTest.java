@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Collections;
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -78,7 +79,6 @@ public class ImageControllerTest {
     @Test
     public void getAllImagesPositive() throws Exception {
 
-
         when(imageRepository.findAll()).thenReturn(Collections.singletonList(
                 ImageEntity.builder()
                         .imageUrl("https://travelsteps.net/uploads/more-prez-septemvri.jpg")
@@ -93,5 +93,28 @@ public class ImageControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getExistingImagePositive() throws Exception {
+        String url = "https://travelsteps.net/uploads/more-prez-septemvri.jpg";
+
+        doReturn(Optional.of(ImageEntity.builder()
+                .imageUrl(url)
+                .tagsEntities(Collections.singletonList(TagsEntity.builder()
+                        .tagID(1)
+                        .tagName("test-tag")
+                        .tagAccuracy(0.95f).build()))
+                .build()))
+                .when(imageRepository).findById(url);
+
+        Gson gson = new Gson();
+        ImageRequest imageRequest = new ImageRequest(url, 1080, 1960);
+        mockMvc.perform(post("/rest/getImageURL")
+                        .contentType("application/json")
+                        .content(gson.toJson(imageRequest)))
+                .andExpect(status().isOk());
+        verify(imageRepository, never()).save(any());
+        verify(tagsRepository, never()).save(any());
     }
 }

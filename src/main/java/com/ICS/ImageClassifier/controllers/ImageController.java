@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -36,29 +37,45 @@ public class ImageController {
     @PostMapping("/rest/getImageURL")
     public ResponseEntity createImage(@RequestBody ImageRequest imageRequest)  {
         try {
-            ImageService imageService = ImageClassificationWrapper.classifyImage(
-                    imageRequest.getImageURL(),
-                    imageRequest.getImageWidth(),
-                    imageRequest.getImageHeight()
-            );
+            Optional<ImageEntity> existingImage = this.imageRepository.findById(imageRequest.getImageURL());
+            if (existingImage.isPresent()){
 
-            this.imageRepository.save(ServiceToEntityConverter.convertToImageEntity(imageService));
-            for (TagsService tag : imageService.getTagsServiceList()) {
-                this.tagsRepository.save(ServiceToEntityConverter.convertToTagsEntity(tag));
-            }
-
-            return  new ResponseEntity(
-                    Image.builder()
-                        .imageURL(imageService.getImageURL())
-                        .tags(imageService.getTagsServiceList().stream().map(tag ->
+                return new ResponseEntity(
+                        Image.builder()
+                        .imageURL(existingImage.get().getImageUrl())
+                        .tags(existingImage.get().getTagsEntities().stream().map(tag ->
                                 Tags.builder()
                                         .tagName(tag.getTagName())
                                         .tagAccuracy(tag.getTagAccuracy())
                                         .build()
                         ).toList())
                         .build(),
-                    HttpStatus.OK
-            );
+                        HttpStatus.OK);
+            }else {
+                ImageService imageService = ImageClassificationWrapper.classifyImage(
+                        imageRequest.getImageURL(),
+                        imageRequest.getImageWidth(),
+                        imageRequest.getImageHeight()
+                );
+
+                this.imageRepository.save(ServiceToEntityConverter.convertToImageEntity(imageService));
+                for (TagsService tag : imageService.getTagsServiceList()) {
+                    this.tagsRepository.save(ServiceToEntityConverter.convertToTagsEntity(tag));
+                }
+
+                return new ResponseEntity(
+                        Image.builder()
+                                .imageURL(imageService.getImageURL())
+                                .tags(imageService.getTagsServiceList().stream().map(tag ->
+                                        Tags.builder()
+                                                .tagName(tag.getTagName())
+                                                .tagAccuracy(tag.getTagAccuracy())
+                                                .build()
+                                ).toList())
+                                .build(),
+                        HttpStatus.OK
+                );
+            }
         }catch (Exception e){
             return new ResponseEntity<>(
                     ApiException.builder()
