@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "image_ics")
+@Table(name = "image")
 @Builder
 @Getter
 @NoArgsConstructor

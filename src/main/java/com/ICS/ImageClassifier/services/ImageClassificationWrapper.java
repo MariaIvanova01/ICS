@@ -26,7 +26,7 @@ public class ImageClassificationWrapper {
     }
 
     private static List<TagsService> invokeClarifai(String imageURL){
-
+        // TODO: remove any hardcoded values and extract them as ENV vars (application.properties)
         V2Grpc.V2BlockingStub stub = V2Grpc.newBlockingStub(ClarifaiChannel.INSTANCE.getGrpcChannel())
                 .withCallCredentials(new ClarifaiCallCredentials("042439d583204f26901781c20cbf2194"));
 

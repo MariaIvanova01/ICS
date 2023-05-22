@@ -13,6 +13,8 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 public class ImageService {
+    // TODO: This is annotated and used as a builder, not service. Please rename it the ImageBuilder.
+
 
     private String imageURL;
 

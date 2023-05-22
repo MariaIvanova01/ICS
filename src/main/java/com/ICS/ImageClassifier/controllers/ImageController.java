@@ -2,7 +2,6 @@ package com.ICS.ImageClassifier.controllers;
 
 import com.ICS.ImageClassifier.exceptions.ApiException;
 import com.ICS.ImageClassifier.models.entities.ImageEntity;
-import com.ICS.ImageClassifier.models.entities.TagsEntity;
 import com.ICS.ImageClassifier.models.rest.models.Image;
 import com.ICS.ImageClassifier.models.rest.models.ImageRequest;
 import com.ICS.ImageClassifier.models.rest.models.Tags;
@@ -18,14 +17,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 
 @RestController
 public class ImageController {
-
+    // TODO: do not expose repositories to controller, instead introduce ImageService and TagService
     private final ImageRepository imageRepository;
     private final TagsRepository tagsRepository;
     private String imageUrl;
@@ -35,12 +33,15 @@ public class ImageController {
         this.tagsRepository = tagsRepository;
     }
 
-    @PostMapping("/rest/getImageURL")
+    // TODO: fix endpoint, "getImageURL" on a POST method is misleading, "processImage" sounds better.
+    // Also you can remove /rest
+
+    @PostMapping("/processImage")
     public ResponseEntity createImage(@RequestBody ImageRequest imageRequest)  {
         try {
             Optional<ImageEntity> existingImage = this.imageRepository.findById(imageRequest.getImageURL());
             if (existingImage.isPresent()){
-
+            // TODO: better to have ImageResponse model, instead if building it here
                 return new ResponseEntity(
                         Image.builder()
                         .imageURL(existingImage.get().getImageUrl())

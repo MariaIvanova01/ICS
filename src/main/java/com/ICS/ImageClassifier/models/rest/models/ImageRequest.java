@@ -9,6 +9,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class ImageRequest {
+    // TODO: question - As a client of the API, how can I get the dimensions of the image?
+    // TODO: check the requirements
     private String imageURL;
 
     private int imageWidth;
