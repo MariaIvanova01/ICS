@@ -28,6 +28,7 @@ public class ImageController {
 
     private final ImageRepository imageRepository;
     private final TagsRepository tagsRepository;
+    private String imageUrl;
 
     public ImageController(ImageRepository imageRepository, TagsRepository tagsRepository) {
         this.imageRepository = imageRepository;
@@ -87,8 +88,46 @@ public class ImageController {
                     HttpStatus.INTERNAL_SERVER_ERROR
             );
         }
+    }
 
-
+    @GetMapping("/getImage/{imageUrl}")
+    public ResponseEntity getImage(@RequestParam("imageUrl") String imageUrl){
+        try {
+            Optional<ImageEntity> existingImage = this.imageRepository.findById(imageUrl);
+            if (existingImage.isPresent()){
+                return new ResponseEntity(
+                        Image.builder()
+                                .imageURL(existingImage.get().getImageUrl())
+                                .tags(existingImage.get().getTagsEntities().stream().map(tag ->
+                                        Tags.builder()
+                                                .tagName(tag.getTagName())
+                                                .tagAccuracy(tag.getTagAccuracy())
+                                                .build()
+                                ).toList())
+                                .build(),
+                        HttpStatus.OK);
+            }else {
+                return new ResponseEntity<>(
+                        ApiException.builder()
+                                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                .timestamp(LocalDateTime.now())
+                                .message("Image with provided URL does not exist!")
+                                .remedy_message("For image classification please submit the image URL!")
+                                .build(),
+                        HttpStatus.NOT_FOUND
+                );
+            }
+        }catch (Exception e){
+            return new ResponseEntity<>(
+                    ApiException.builder()
+                            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .timestamp(LocalDateTime.now())
+                            .message("Image URL is not valid!")
+                            .remedy_message("Check weather the URL is in the correct format.")
+                            .build(),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
     }
 
     @GetMapping("/getAllImages")

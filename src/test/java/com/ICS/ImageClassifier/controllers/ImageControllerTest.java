@@ -96,7 +96,7 @@ public class ImageControllerTest {
     }
 
     @Test
-    public void getExistingImagePositive() throws Exception {
+    public void notSavingExistingImagePositive() throws Exception {
         String url = "https://travelsteps.net/uploads/more-prez-septemvri.jpg";
 
         doReturn(Optional.of(ImageEntity.builder()
@@ -116,5 +116,34 @@ public class ImageControllerTest {
                 .andExpect(status().isOk());
         verify(imageRepository, never()).save(any());
         verify(tagsRepository, never()).save(any());
+    }
+
+/*    @Test
+    public void getExistingImagePositive() throws Exception {
+        String url = "https://travelsteps.net/uploads/more-prez-septemvri.jpg";
+
+        doReturn(Optional.of(ImageEntity.builder()
+                .imageUrl(url)
+                .tagsEntities(Collections.singletonList(TagsEntity.builder()
+                        .tagID(1)
+                        .tagName("test-tag")
+                        .tagAccuracy(0.95f).build()))
+                .build()))
+                .when(imageRepository).findById(url);
+
+        mockMvc.perform(get("/getImage/{imageUrl}")
+                        .param("imageUrl", url))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }*/
+
+    @Test
+    public void getExistingImageNegative() throws Exception {
+        String url = "https://travelsteps.net/uploads/more-prez-septemvri.jpg";
+
+        mockMvc.perform(get("/getImage/{imageUrl}", url)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
     }
 }
