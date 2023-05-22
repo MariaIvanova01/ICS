@@ -47,7 +47,7 @@ public class ImageControllerTest {
     }
 
     @Test
-    public void createImageOnPostPositive() throws Exception {
+    public void testCreateImageOnPostPositive() throws Exception {
         String url = "https://travelsteps.net/uploads/more-prez-septemvri.jpg";
         ImageRequest imageRequest = new ImageRequest(url, 1080, 1960);
 
@@ -63,7 +63,7 @@ public class ImageControllerTest {
     }
 
     @Test
-    public void createImageOnPostNegative() throws Exception {
+    public void testCreateImageOnPostNegative() throws Exception {
         String url = "https://travelsteps.net/";
         ImageRequest imageRequest = new ImageRequest(url, 1080, 1960);
 
@@ -77,7 +77,7 @@ public class ImageControllerTest {
     }
 
     @Test
-    public void getAllImagesPositive() throws Exception {
+    public void testGetAllImagesPositive() throws Exception {
 
         when(imageRepository.findAll()).thenReturn(Collections.singletonList(
                 ImageEntity.builder()
@@ -96,7 +96,7 @@ public class ImageControllerTest {
     }
 
     @Test
-    public void notSavingExistingImagePositive() throws Exception {
+    public void testNotSavingExistingImagePositive() throws Exception {
         String url = "https://travelsteps.net/uploads/more-prez-septemvri.jpg";
 
         doReturn(Optional.of(ImageEntity.builder()
@@ -119,7 +119,7 @@ public class ImageControllerTest {
     }
 
 /*    @Test
-    public void getExistingImagePositive() throws Exception {
+    public void testGetExistingImagePositive() throws Exception {
         String url = "https://travelsteps.net/uploads/more-prez-septemvri.jpg";
 
         doReturn(Optional.of(ImageEntity.builder()
@@ -138,7 +138,7 @@ public class ImageControllerTest {
     }*/
 
     @Test
-    public void getExistingImageNegative() throws Exception {
+    public void testGetExistingImageNegative() throws Exception {
         String url = "https://travelsteps.net/uploads/more-prez-septemvri.jpg";
 
         mockMvc.perform(get("/getImage/{imageUrl}", url)
