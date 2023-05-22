@@ -10,6 +10,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class TagsService {
+
+    private int tagID;
+
     private String tagName;
 
     private float tagAccuracy;

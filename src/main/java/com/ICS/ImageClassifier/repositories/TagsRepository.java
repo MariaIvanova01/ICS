@@ -6,5 +6,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TagsRepository extends CrudRepository<TagsEntity, Integer> {
-    Iterable<TagsEntity> getAllByTagID(int tagID);
 }

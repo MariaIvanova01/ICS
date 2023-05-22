@@ -1,35 +1,61 @@
 package com.ICS.ImageClassifier.controllers;
 
 import com.ICS.ImageClassifier.exceptions.ApiException;
+import com.ICS.ImageClassifier.models.entities.ImageEntity;
+import com.ICS.ImageClassifier.models.entities.TagsEntity;
 import com.ICS.ImageClassifier.models.rest.models.Image;
+import com.ICS.ImageClassifier.models.rest.models.ImageRequest;
 import com.ICS.ImageClassifier.models.rest.models.Tags;
+import com.ICS.ImageClassifier.models.service.models.ImageService;
 import com.ICS.ImageClassifier.models.service.models.TagsService;
+import com.ICS.ImageClassifier.repositories.ImageRepository;
+import com.ICS.ImageClassifier.repositories.TagsRepository;
 import com.ICS.ImageClassifier.services.ImageClassificationWrapper;
+import com.ICS.ImageClassifier.services.ServiceToEntityConverter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
 
 @RestController
 public class ImageController {
-    //TODO Implement Post Method for v1/image (my API that receives the image URL)
+
+    private final ImageRepository imageRepository;
+    private final TagsRepository tagsRepository;
+
+    public ImageController(ImageRepository imageRepository, TagsRepository tagsRepository) {
+        this.imageRepository = imageRepository;
+        this.tagsRepository = tagsRepository;
+    }
 
     @PostMapping("/rest/getImageURL")
-    public ResponseEntity createImage(@RequestBody String imageURL)  {
-        //TODO Save Image to Database (additionally in user session)
+    public ResponseEntity createImage(@RequestBody ImageRequest imageRequest)  {
         try {
-            List<Tags> tags = ImageClassificationWrapper.classifyImage(imageURL).stream().map(tag ->
-                 Tags.builder()
-                        .tagName(tag.getTagName())
-                        .tagAccuracy(tag.getTagAccuracy())
-                        .build()
-            ).toList();
+            ImageService imageService = ImageClassificationWrapper.classifyImage(
+                    imageRequest.getImageURL(),
+                    imageRequest.getImageWidth(),
+                    imageRequest.getImageHeight()
+            );
+
+            this.imageRepository.save(ServiceToEntityConverter.convertToImageEntity(imageService));
+            for (TagsService tag : imageService.getTagsServiceList()) {
+                this.tagsRepository.save(ServiceToEntityConverter.convertToTagsEntity(tag));
+            }
+
             return  new ResponseEntity(
                     Image.builder()
-                        .imageURL(imageURL)
-                        .tags(tags)
+                        .imageURL(imageService.getImageURL())
+                        .tags(imageService.getTagsServiceList().stream().map(tag ->
+                                Tags.builder()
+                                        .tagName(tag.getTagName())
+                                        .tagAccuracy(tag.getTagAccuracy())
+                                        .build()
+                        ).toList())
                         .build(),
                     HttpStatus.OK
             );
@@ -48,13 +74,23 @@ public class ImageController {
 
     }
 
+    @GetMapping("/getAllImages")
+    public List<Image> getAllImages(){
+        Iterable<ImageEntity> imageEntities = imageRepository.findAll();
+        List<Image> images = new ArrayList<>();
+        for (ImageEntity imageEntity : imageEntities) {
+            images.add(Image.builder()
+                    .imageURL(imageEntity.getImageUrl())
+                    .tags(imageEntity.getTagsEntities().stream().map(tagsEntity ->
+                                    Tags.builder()
+                                            .tagName(tagsEntity.getTagName())
+                                            .tagAccuracy(tagsEntity.getTagAccuracy())
+                                            .build()
+                            ).toList()
+                    ).build());
+        }
 
-    //TODO as parameter to get imgURL, call method classifyImage  -> for sprint two
-    // call the method from image repo to add it in the database -> for sprint two
-    // to construct the object image and return it as response
+        return images;
+    }
 
-
-    //TODO Implement GET Method to return images (additionally to return images for specific user) -> for sprint two
-
-    //TODO Implement Delete Method to remove image (additionally for specific user) ? -> for sprint two
 }

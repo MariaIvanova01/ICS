@@ -1,9 +1,17 @@
 package com.ICS.ImageClassifier.models.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "image_tags")
+@Builder
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class TagsEntity {
 
     @Id
