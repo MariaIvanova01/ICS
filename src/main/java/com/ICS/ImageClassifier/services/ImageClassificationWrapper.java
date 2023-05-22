@@ -7,33 +7,35 @@ import com.clarifai.channel.ClarifaiChannel;
 import com.clarifai.credentials.ClarifaiCallCredentials;
 import com.clarifai.grpc.api.*;
 import com.clarifai.grpc.api.status.StatusCode;
-
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
+import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Value;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.*;
 
+@Component
 public class ImageClassificationWrapper {
 
-    private ApiException apiException;
-    //TODO Implement method to access the third-party API passing ImageURL and handling the response (text manipulation)
+    @Value("${CLASSIFIER_API}")
+    private static final String CLASSIFIER_API = null;
 
+    @Value("${MODEL_ID}")
+    private static final String MODEL_ID = null;
+
+    private ApiException apiException;
     public static ImageService classifyImage(String imageURL, int imageWidth, int imageHeight) throws IOException {
         ImageService imageService = new ImageService(imageURL, imageWidth, imageHeight, invokeClarifai(imageURL));
         return imageService;
     }
 
     private static List<TagsService> invokeClarifai(String imageURL){
-        // TODO: remove any hardcoded values and extract them as ENV vars (application.properties)
+
         V2Grpc.V2BlockingStub stub = V2Grpc.newBlockingStub(ClarifaiChannel.INSTANCE.getGrpcChannel())
-                .withCallCredentials(new ClarifaiCallCredentials("042439d583204f26901781c20cbf2194"));
+                .withCallCredentials(new ClarifaiCallCredentials(CLASSIFIER_API));
 
 
         MultiOutputResponse response = stub.postModelOutputs(
                 PostModelOutputsRequest.newBuilder()
-                        .setModelId("aaa03c23b3724a16a56b629203edc62c")
+                        .setModelId(MODEL_ID)
                         .addInputs(
                                 Input.newBuilder().setData(
                                         Data.newBuilder().setImage(

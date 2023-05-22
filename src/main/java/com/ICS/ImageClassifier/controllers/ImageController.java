@@ -33,9 +33,6 @@ public class ImageController {
         this.tagsRepository = tagsRepository;
     }
 
-    // TODO: fix endpoint, "getImageURL" on a POST method is misleading, "processImage" sounds better.
-    // Also you can remove /rest
-
     @PostMapping("/processImage")
     public ResponseEntity createImage(@RequestBody ImageRequest imageRequest)  {
         try {
