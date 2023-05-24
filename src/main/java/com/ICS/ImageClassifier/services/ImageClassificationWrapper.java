@@ -1,8 +1,7 @@
 package com.ICS.ImageClassifier.services;
 
-import com.ICS.ImageClassifier.exceptions.ApiException;
-import com.ICS.ImageClassifier.models.service.models.ImageService;
-import com.ICS.ImageClassifier.models.service.models.TagsService;
+import com.ICS.ImageClassifier.models.service.models.ImageBuilder;
+import com.ICS.ImageClassifier.models.service.models.TagsBuilder;
 import com.clarifai.channel.ClarifaiChannel;
 import com.clarifai.credentials.ClarifaiCallCredentials;
 import com.clarifai.grpc.api.*;
@@ -15,27 +14,26 @@ import java.util.*;
 @Component
 public class ImageClassificationWrapper {
 
-    @Value("${CLASSIFIER_API}")
-    private static final String CLASSIFIER_API = null;
+    @Value("${classifier.api}")
+    private String api;
 
     @Value("${MODEL_ID}")
-    private static final String MODEL_ID = null;
+    private String model;
 
-    private ApiException apiException;
-    public static ImageService classifyImage(String imageURL, int imageWidth, int imageHeight) throws IOException {
-        ImageService imageService = new ImageService(imageURL, imageWidth, imageHeight, invokeClarifai(imageURL));
-        return imageService;
+    public ImageBuilder classifyImage(String imageURL, int imageWidth, int imageHeight) throws IOException {
+        ImageBuilder imageBuilder = new ImageBuilder(imageURL, imageWidth, imageHeight, invokeClarifai(imageURL));
+        return imageBuilder;
     }
 
-    private static List<TagsService> invokeClarifai(String imageURL){
+    private List<TagsBuilder> invokeClarifai(String imageURL){
 
         V2Grpc.V2BlockingStub stub = V2Grpc.newBlockingStub(ClarifaiChannel.INSTANCE.getGrpcChannel())
-                .withCallCredentials(new ClarifaiCallCredentials(CLASSIFIER_API));
+                .withCallCredentials(new ClarifaiCallCredentials(api));
 
 
         MultiOutputResponse response = stub.postModelOutputs(
                 PostModelOutputsRequest.newBuilder()
-                        .setModelId(MODEL_ID)
+                        .setModelId(model)
                         .addInputs(
                                 Input.newBuilder().setData(
                                         Data.newBuilder().setImage(
@@ -51,11 +49,11 @@ public class ImageClassificationWrapper {
         }
 
 
-        List<TagsService> tags = new ArrayList<>();
+        List<TagsBuilder> tags = new ArrayList<>();
 
         for (Concept concept : response.getOutputs(0).getData().getConceptsList()) {
             if (concept.getValue() >= 0.93) {
-                tags.add(TagsService
+                tags.add(TagsBuilder
                         .builder()
                         .tagName(concept.getName())
                         .tagAccuracy(concept.getValue())

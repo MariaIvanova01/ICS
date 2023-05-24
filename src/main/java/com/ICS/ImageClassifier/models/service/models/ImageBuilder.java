@@ -12,9 +12,7 @@ import java.util.List;
 @Setter
 @Builder
 @AllArgsConstructor
-public class ImageService {
-    // TODO: This is annotated and used as a builder, not service. Please rename it the ImageBuilder.
-
+public class ImageBuilder {
 
     private String imageURL;
 
@@ -24,12 +22,12 @@ public class ImageService {
 
     private int imageHeight;
 
-    private List<TagsService> tagsServiceList;
+    private List<TagsBuilder> tagsBuilderList;
 
-    public ImageService(String imageUrl, int imageWidth, int imageHeight, List<TagsService> tagsServiceList) {
+    public ImageBuilder(String imageUrl, int imageWidth, int imageHeight, List<TagsBuilder> tagsBuilderList) {
         this.imageURL = imageUrl;
         setSubmitDate();
-        this.tagsServiceList = tagsServiceList;
+        this.tagsBuilderList = tagsBuilderList;
         this.imageWidth = imageWidth;
         this.imageHeight = imageHeight;
     }
