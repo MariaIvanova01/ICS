@@ -1,5 +1,8 @@
 package com.ICS.ImageClassifier.controllers;
 
+import com.ICS.ImageClassifier.exceptions.ApiException;
+import com.ICS.ImageClassifier.models.entities.ImageEntity;
+import com.ICS.ImageClassifier.models.entities.TagsEntity;
 import com.ICS.ImageClassifier.models.rest.models.Image;
 import com.ICS.ImageClassifier.models.rest.models.ImageRequest;
 import com.ICS.ImageClassifier.models.rest.models.ImageResponse;
@@ -9,12 +12,19 @@ import com.ICS.ImageClassifier.services.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 
 @RestController
 public class ImageController {
+
+    private final ImageRepository imageRepository;
+    private final TagsRepository tagsRepository;
+    private String imageUrl;
 
     private final ImageService imageService;
 
@@ -23,12 +33,23 @@ public class ImageController {
         this.imageService = imageService;
     }
 
-    @PostMapping("/processImage")
-    public ImageResponse createImage(@RequestBody ImageRequest imageRequest)  {
+    @PostMapping("/rest/getImageURL")
+    public ResponseEntity createImage(@RequestBody ImageRequest imageRequest)  {
         try {
-            Optional<ImageResponse> imageResponse = this.imageService.findImageByImageURL(imageRequest.getImageURL());
-            if (imageResponse.isPresent()){
-                return imageResponse.get();
+            Optional<ImageEntity> existingImage = this.imageRepository.findById(imageRequest.getImageURL());
+            if (existingImage.isPresent()){
+
+                return new ResponseEntity(
+                        Image.builder()
+                        .imageURL(existingImage.get().getImageUrl())
+                        .tags(existingImage.get().getTagsEntities().stream().map(tag ->
+                                Tags.builder()
+                                        .tagName(tag.getTagName())
+                                        .tagAccuracy(tag.getTagAccuracy())
+                                        .build()
+                        ).toList())
+                        .build(),
+                        HttpStatus.OK);
             }else {
                 return this.imageService.addImage(
                         imageRequest.getImageURL(),

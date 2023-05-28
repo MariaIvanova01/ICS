@@ -25,7 +25,7 @@ public class ImageClassificationWrapper {
         return imageBuilder;
     }
 
-    private List<TagsBuilder> invokeClarifai(String imageURL){
+    private static List<TagsService> invokeClarifai(String imageURL){
 
         V2Grpc.V2BlockingStub stub = V2Grpc.newBlockingStub(ClarifaiChannel.INSTANCE.getGrpcChannel())
                 .withCallCredentials(new ClarifaiCallCredentials(api));

@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 @Builder
 @AllArgsConstructor
-public class ImageBuilder {
+public class ImageService {
 
     private String imageURL;
 

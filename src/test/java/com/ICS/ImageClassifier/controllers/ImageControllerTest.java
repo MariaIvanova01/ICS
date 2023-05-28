@@ -18,6 +18,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -60,28 +61,25 @@ public class ImageControllerTest {
         String url = "https://travelsteps.net/uploads/more-prez-septemvri.jpg";
         ImageRequest imageRequest = new ImageRequest(url, 1080, 1960);
 
-        // TODO: You should mock the ImageClassificationWrapper.classifyImage as otherwise it will
-        // post the image to the real service if it is configures properly.
 
         Gson gson = new Gson();
-        mockMvc.perform(post("/processImage")
+        mockMvc.perform(post("/rest/getImageURL")
                 .contentType("application/json")
                 .content(gson.toJson(imageRequest)))
                 .andExpect(status().isOk());
 
-        // TODO: You should verify also that the response is valid json and can be mapped to the expected model
-        verify(imageService, times(1)).findImageByImageURL(any());
-        verify(imageService, times(1)).addImage(any(),any(),any());
-    }*/
+        verify(imageRepository, times(1)).save(any());
+        verify(tagsRepository, times(14)).save(any());
+    }
 
-   /* @Test
+    @Test
     public void testCreateImageOnPostNegative() throws Exception {
         String url = "https://travelsteps.net/";
         ImageRequest imageRequest = new ImageRequest(url, 1080, 1960);
 
         Gson gson = new Gson();
 
-        mockMvc.perform(post("/processImage")
+        mockMvc.perform(post("/rest/getImageURL")
                         .contentType("application/json")
                         .content(gson.toJson(imageRequest)))
                 .andExpect(status().is5xxServerError());
@@ -122,7 +120,7 @@ public class ImageControllerTest {
 
         Gson gson = new Gson();
         ImageRequest imageRequest = new ImageRequest(url, 1080, 1960);
-        mockMvc.perform(post("/processImage")
+        mockMvc.perform(post("/rest/getImageURL")
                         .contentType("application/json")
                         .content(gson.toJson(imageRequest)))
                 .andExpect(status().isOk());
