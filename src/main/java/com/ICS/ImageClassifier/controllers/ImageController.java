@@ -2,6 +2,7 @@ package com.ICS.ImageClassifier.controllers;
 
 import com.ICS.ImageClassifier.exceptions.ApiException;
 import com.ICS.ImageClassifier.models.entities.ImageEntity;
+import com.ICS.ImageClassifier.models.entities.TagsEntity;
 import com.ICS.ImageClassifier.models.rest.models.Image;
 import com.ICS.ImageClassifier.models.rest.models.ImageRequest;
 import com.ICS.ImageClassifier.models.rest.models.Tags;
@@ -27,6 +28,7 @@ public class ImageController {
     private final ImageRepository imageRepository;
     private final TagsRepository tagsRepository;
     private final ImageClassificationWrapper imageClassificationWrapper;
+
     public ImageController(ImageRepository imageRepository, TagsRepository tagsRepository, ImageClassificationWrapper imageClassificationWrapper) {
         this.imageRepository = imageRepository;
         this.tagsRepository = tagsRepository;
@@ -34,10 +36,10 @@ public class ImageController {
     }
 
     @PostMapping("/processImage")
-    public ResponseEntity createImage(@RequestBody ImageRequest imageRequest)  {
+    public ResponseEntity createImage(@RequestBody ImageRequest imageRequest) {
         try {
             Optional<ImageEntity> existingImage = this.imageRepository.findById(imageRequest.getImageURL());
-            if (existingImage.isPresent()){
+            if (existingImage.isPresent()) {
 
                 // TODO: better to have ImageResponse model, instead if building it here
                 return new ResponseEntity(
@@ -51,7 +53,7 @@ public class ImageController {
                                 ).toList())
                                 .build(),
                         HttpStatus.OK);
-            }else {
+            } else {
                 ImageBuilder imageBuilder = imageClassificationWrapper.classifyImage(
                         imageRequest.getImageURL(),
                         imageRequest.getImageWidth(),
@@ -73,7 +75,7 @@ public class ImageController {
                         HttpStatus.OK
                 );
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>(
                     ApiException.builder()
                             .status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -85,11 +87,12 @@ public class ImageController {
             );
         }
     }
+
     @GetMapping("/getImage")
-    public ResponseEntity getImage(@RequestParam("imageUrl") String imageUrl){
+    public ResponseEntity getImage(@RequestParam("imageUrl") String imageUrl) {
         try {
             Optional<ImageEntity> existingImage = this.imageRepository.findById(imageUrl);
-            if (existingImage.isPresent()){
+            if (existingImage.isPresent()) {
                 return new ResponseEntity(
                         Image.builder()
                                 .imageURL(existingImage.get().getImageUrl())
@@ -101,7 +104,7 @@ public class ImageController {
                                 ).toList())
                                 .build(),
                         HttpStatus.OK);
-            }else {
+            } else {
                 return new ResponseEntity<>(
                         ApiException.builder()
                                 .status(HttpStatus.NOT_FOUND)
@@ -112,7 +115,7 @@ public class ImageController {
                         HttpStatus.NOT_FOUND
                 );
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>(
                     ApiException.builder()
                             .status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -124,9 +127,39 @@ public class ImageController {
             );
         }
     }
+
     @GetMapping("/getAllImages")
-    public List<Image> getAllImages(){
+    public List<Image> getAllImages() {
         Iterable<ImageEntity> imageEntities = imageRepository.findAll();
+        return getImages(imageEntities);
+    }
+
+    @GetMapping("/getImagesByTags")
+    public List<Image> getImagesByTags(@RequestParam("tags") List<String> tags) {
+        Iterable<ImageEntity> imageEntities = this.imageRepository.findAll();
+
+        /*try {*/
+            List<ImageEntity> existingImages = new ArrayList<>();
+            for (ImageEntity imageEntity : imageEntities) {
+                for (TagsEntity tag : imageEntity.getTagsEntities()) {
+                    if (tags.contains(tag.getTagName())) {
+                        existingImages.add(imageEntity);
+                    }
+                }
+            }
+            return getImages(existingImages);
+       /* } catch (Exception e) {
+            return new ApiException.builder()
+                    .status(HttpStatus.NOT_FOUND)
+                    .timestamp(LocalDateTime.now())
+                    .message("There is no images with the provided tags")
+                    .build();
+        }*/
+
+    }
+
+
+    private List<Image> getImages(Iterable<ImageEntity> imageEntities) {
         List<Image> images = new ArrayList<>();
         for (ImageEntity imageEntity : imageEntities) {
             images.add(Image.builder()
