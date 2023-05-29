@@ -26,8 +26,7 @@ public class ImageController {
     // TODO: do not expose repositories to controller, instead introduce ImageService and TagService
     private final ImageRepository imageRepository;
     private final TagsRepository tagsRepository;
-
-    private ImageClassificationWrapper imageClassificationWrapper;
+    private final ImageClassificationWrapper imageClassificationWrapper;
     public ImageController(ImageRepository imageRepository, TagsRepository tagsRepository, ImageClassificationWrapper imageClassificationWrapper) {
         this.imageRepository = imageRepository;
         this.tagsRepository = tagsRepository;
