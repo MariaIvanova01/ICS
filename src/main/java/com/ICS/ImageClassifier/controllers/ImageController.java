@@ -87,8 +87,7 @@ public class ImageController {
         }
     }
     @GetMapping("/getImage")
-    @ResponseBody
-    public ResponseEntity getImage(@RequestParam String imageUrl){
+    public ResponseEntity getImage(@RequestParam("imageUrl") String imageUrl){
         try {
             Optional<ImageEntity> existingImage = this.imageRepository.findById(imageUrl);
             if (existingImage.isPresent()){
@@ -106,12 +105,12 @@ public class ImageController {
             }else {
                 return new ResponseEntity<>(
                         ApiException.builder()
-                                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                .status(HttpStatus.NOT_FOUND)
                                 .timestamp(LocalDateTime.now())
                                 .message("Image with provided URL does not exist!")
                                 .remedy_message("For image classification please submit the image URL!")
                                 .build(),
-                        HttpStatus.INTERNAL_SERVER_ERROR
+                        HttpStatus.NOT_FOUND
                 );
             }
         }catch (Exception e){
