@@ -17,7 +17,7 @@ public class ImageClassificationWrapper {
     @Value("${classifier.api}")
     private String api;
 
-    @Value("${MODEL_ID}")
+    @Value("${model.id}")
     private String model;
 
     public ImageBuilder classifyImage(String imageURL, int imageWidth, int imageHeight) throws IOException {
@@ -25,7 +25,7 @@ public class ImageClassificationWrapper {
         return imageBuilder;
     }
 
-    private static List<TagsService> invokeClarifai(String imageURL){
+    private  List<TagsBuilder> invokeClarifai(String imageURL){
 
         V2Grpc.V2BlockingStub stub = V2Grpc.newBlockingStub(ClarifaiChannel.INSTANCE.getGrpcChannel())
                 .withCallCredentials(new ClarifaiCallCredentials(api));
@@ -52,7 +52,7 @@ public class ImageClassificationWrapper {
         List<TagsBuilder> tags = new ArrayList<>();
 
         for (Concept concept : response.getOutputs(0).getData().getConceptsList()) {
-            if (concept.getValue() >= 0.93) {
+            if (concept.getValue() >= 0.933) {
                 tags.add(TagsBuilder
                         .builder()
                         .tagName(concept.getName())

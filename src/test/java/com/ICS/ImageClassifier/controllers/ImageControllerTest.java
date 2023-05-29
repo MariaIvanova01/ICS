@@ -3,10 +3,11 @@ package com.ICS.ImageClassifier.controllers;
 import com.ICS.ImageClassifier.models.entities.ImageEntity;
 import com.ICS.ImageClassifier.models.entities.TagsEntity;
 import com.ICS.ImageClassifier.models.rest.models.ImageRequest;
+import com.ICS.ImageClassifier.models.service.models.ImageBuilder;
+import com.ICS.ImageClassifier.models.service.models.TagsBuilder;
 import com.ICS.ImageClassifier.repositories.ImageRepository;
 import com.ICS.ImageClassifier.repositories.TagsRepository;
 import com.ICS.ImageClassifier.services.ImageClassificationWrapper;
-import com.ICS.ImageClassifier.services.ImageService;
 import com.google.gson.Gson;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -18,8 +19,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -36,8 +37,6 @@ public class ImageControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private ImageService imageService;
-    @MockBean
     private EntityManager entityManager;
     @MockBean
     private EntityManagerFactory entityManagerFactory;
@@ -53,23 +52,36 @@ public class ImageControllerTest {
     @Before
     public void setUp() {
         MockitoAnnotations.openMocks(imageRepository);
-        MockitoAnnotations.openMocks(imageService);
+        MockitoAnnotations.openMocks(imageClassificationWrapper);
     }
 
-    /*@Test
+    @Test
     public void testCreateImageOnPostPositive() throws Exception {
         String url = "https://travelsteps.net/uploads/more-prez-septemvri.jpg";
         ImageRequest imageRequest = new ImageRequest(url, 1080, 1960);
 
 
         Gson gson = new Gson();
-        mockMvc.perform(post("/rest/getImageURL")
+
+        when(imageClassificationWrapper.classifyImage(url,imageRequest.getImageWidth(),imageRequest.getImageHeight()))
+                .thenReturn(ImageBuilder.builder()
+                        .imageURL(url)
+                        .submitDate(LocalDate.now())
+                        .imageHeight(imageRequest.getImageWidth())
+                        .imageWidth(imageRequest.getImageHeight())
+                        .tagsBuilderList(
+                                Collections.singletonList(
+                                        TagsBuilder.builder()
+                                                .tagID(1)
+                                                .tagName("water")
+                                                .tagAccuracy(0.99534047F)
+                                                .build()))
+                        .build());
+
+        mockMvc.perform(post("/processImage")
                 .contentType("application/json")
                 .content(gson.toJson(imageRequest)))
                 .andExpect(status().isOk());
-
-        verify(imageRepository, times(1)).save(any());
-        verify(tagsRepository, times(14)).save(any());
     }
 
     @Test
@@ -79,12 +91,12 @@ public class ImageControllerTest {
 
         Gson gson = new Gson();
 
-        mockMvc.perform(post("/rest/getImageURL")
+        mockMvc.perform(post("/processImage")
                         .contentType("application/json")
                         .content(gson.toJson(imageRequest)))
                 .andExpect(status().is5xxServerError());
 
-    }*/
+    }
 
     @Test
     public void testGetAllImagesPositive() throws Exception {
@@ -120,7 +132,7 @@ public class ImageControllerTest {
 
         Gson gson = new Gson();
         ImageRequest imageRequest = new ImageRequest(url, 1080, 1960);
-        mockMvc.perform(post("/rest/getImageURL")
+        mockMvc.perform(post("/processImage")
                         .contentType("application/json")
                         .content(gson.toJson(imageRequest)))
                 .andExpect(status().isOk());
@@ -128,24 +140,28 @@ public class ImageControllerTest {
         verify(tagsRepository, never()).save(any());
     }
 
-/*    @Test
+    @Test
     public void testGetExistingImagePositive() throws Exception {
         String url = "https://travelsteps.net/uploads/more-prez-septemvri.jpg";
-
-        doReturn(Optional.of(ImageEntity.builder()
+        Optional<ImageEntity> imageEntity = Optional.of(ImageEntity.builder()
                 .imageUrl(url)
+                .submitDate(LocalDate.now())
+                .imageWidth(1000)
+                .imageHeight(2000)
                 .tagsEntities(Collections.singletonList(TagsEntity.builder()
                         .tagID(1)
                         .tagName("test-tag")
                         .tagAccuracy(0.95f).build()))
-                .build()))
+                .build());
+
+        doReturn(imageEntity)
                 .when(imageRepository).findById(url);
 
-        mockMvc.perform(get("/getImage/{imageUrl}")
+        mockMvc.perform(get("/getImage")
                         .param("imageUrl", url))
                 .andDo(print())
                 .andExpect(status().isOk());
-    }*/
+    }
 
     @Test
     public void testGetExistingImageNegative() throws Exception {
