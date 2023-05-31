@@ -1,1 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
+$primary-color:hsl(198, 0%, 87%);
+
+body{
+  background-color: $primary-color;
+}

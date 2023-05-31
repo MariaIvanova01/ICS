@@ -1,9 +1,7 @@
-<body>
-<form clrForm >
+<form clrForm [formGroup]="imageForm">
   <clr-input-container>
-    <input clrInput type="text" ngModel="url" name="url" />
+    <input clrInput type="text" formControlName="imageUrl" />
   </clr-input-container>
+  <button class="btn btn-primary" type="submit" (click)="submit()">Submit</button>
 </form>
-<button class="btn btn-outline">Regular</button>
-</body>
 
