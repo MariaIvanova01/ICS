@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {HttpService} from "../services/http-services.service";
+import {AnalyseService} from "../services/analyse.service";
 
 @Component({
   selector: 'app-homepage',
@@ -9,14 +9,16 @@ import {HttpService} from "../services/http-services.service";
 })
 export class HomepageComponent {
   imageForm = new FormGroup({
-    imageUrl: new FormControl('DEFAULT', Validators.required),
+    imageUrl: new FormControl('', Validators.required),
   });
+  constructor(private analyseService: AnalyseService) {
+  }
 
-  submit(){
-    console.log(this.imageForm.getRawValue());
-
-    this.imageForm.setValue({
-      imageUrl: "YEAH"
+  submit(imageUrl: any){
+    console.log(imageUrl)
+    this.analyseService.processImage(imageUrl.value.imageUrl, 200,200)
+      .subscribe(response => {
+      console.log(response);
     })
   }
 

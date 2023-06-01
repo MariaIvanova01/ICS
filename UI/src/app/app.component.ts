@@ -12,9 +12,5 @@ export class AppComponent implements OnInit{
   posts : any;
   constructor(private httpService: HttpService){}
 
-  ngOnInit() {
-    this.httpService.getPosts().subscribe(
-      (response) => { this.posts = response; },
-      (error) => { console.log(error); });
-  }
+  ngOnInit() {}
 }

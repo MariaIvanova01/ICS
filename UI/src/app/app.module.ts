@@ -11,6 +11,8 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ClarityModule} from "@clr/angular";
 import {FormsModule} from "@angular/forms";
 import {ReactiveFormsModule} from "@angular/forms";
+import {HttpService} from "./services/http-services.service";
+
 
 @NgModule({
   declarations: [
@@ -29,7 +31,9 @@ import {ReactiveFormsModule} from "@angular/forms";
     FormsModule,
     ReactiveFormsModule
   ],
-  providers: [],
+  providers: [
+    HttpService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

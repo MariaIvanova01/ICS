@@ -1,7 +1,12 @@
-<form clrForm [formGroup]="imageForm">
+<h1 class="clr-row clr-justify-content-center">Point an image to tag and add in gallery</h1>
+<form clrForm [formGroup]="imageForm" class="clr-row clr-justify-content-center">
   <clr-input-container>
-    <input clrInput type="text" formControlName="imageUrl" />
+    <input clrInput placeholder="Add an image URL to analyse" type="text" formControlName="imageUrl" />
   </clr-input-container>
-  <button class="btn btn-primary" type="submit" (click)="submit()">Submit</button>
+  <button class="btn btn-primary clr-row clr-justify-content-center " type="submit" (click)="submit(imageForm)">Submit</button>
 </form>
 
+<!--  <div class="form-holder">
+    <textarea rows="1" class="clr-textarea" formControlName="imageUrl" name="description" required></textarea>
+    <button class="btn btn-primary" type="submit" (click)="submit(imageForm)">Submit</button>
+  </div>-->

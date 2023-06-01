@@ -1,15 +1,33 @@
-import { HttpClient } from  '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import {catchError, EMPTY, Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class HttpService {
+  private apiUrl: string = 'http://localhost:8080/';
+  constructor(private http: HttpClient) {
 
-  private url = 'https://my-json-server.typicode.com/JSGund/XHR-Fetch-Request-JavaScript/posts';
-
-  constructor(private http: HttpClient) { }
-  getPosts() {
-    return this.http.get(this.url);
   }
+  get<T>(url:string, params: { }): Observable<T> {
+
+    return this.http.get<T>(this.apiUrl + url + this.setQueryParams(params))
+      .pipe(catchError((response: HttpErrorResponse)=>{
+        return EMPTY; //eventually error in popup
+      }));
+  }
+  post<T>(url: string, data: any): Observable<T>{
+    return this.http.post<T>(this.apiUrl + url, data)
+    .pipe(catchError((response: HttpErrorResponse)=>{
+      return EMPTY; //eventually error in popup
+    }));
+  }
+
+  setQueryParams(params: {}){
+    if(params != ''){
+
+    }
+    return params;
+}
 }
