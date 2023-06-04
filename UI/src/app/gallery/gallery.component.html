@@ -1,1 +1,22 @@
-<p>gallery works!</p>
+<header class="header header-7, clr-row clr-justify-content-end">
+ <!-- <form class="search">
+    <input id="search_input" type="text" placeholder="Search..." name="searchInput" [(ngModel)]="searchTags">
+    <button type="button" class="btn btn-icon" aria-label="home" (click)="tagSearch()" #searchButton>
+      <cds-icon shape="search"></cds-icon>
+    </button>
+  </form>-->
+  <div class="header-nav">
+    <a href="javascript://" class="nav-link nav-text" routerLink = "/homepage" routerLinkActive = "active">Analyse</a>
+    <a href="javascript://" class="nav-link nav-text" routerLink = "/gallery" routerLinkActive="active">Gallery</a>
+  </div>
+</header>
+
+<div class="clr-row">
+    <div *ngFor="let image of images" class="clr-col-lg-4 clr-col-12" >
+      <a class="card clickable" >
+        <div class="card-img" (click)="openImage(image)">
+          <img src="{{image['imageURL']}}" alt="..."  />
+        </div>
+      </a>
+    </div>
+</div>

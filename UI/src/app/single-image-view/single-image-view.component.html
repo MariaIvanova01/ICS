@@ -1,1 +1,22 @@
-<p>single-image-view works!</p>
+<header class="header header-7,clr-row clr-justify-content-end">
+  <div class="header-nav">
+    <a href="javascript://" class="nav-link nav-text" routerLink = "/homepage" routerLinkActive = "active">Analyse</a>
+    <a href="javascript://" class="nav-link nav-text" routerLink = "/gallery" routerLinkActive="active">Gallery</a>
+  </div>
+</header>
+<div *ngIf="image" class="clr-row">
+  <div class="clr-col-lg-6 clr-col-12">
+    <div class="card-img">
+      <img src="{{image['imageURL']}}" alt="..." />
+    </div>
+  </div>
+  <div class="clr-col-lg-6 clr-col-12">
+    <div id="imageTags">
+      <a *ngFor="let tag of image['tags']" class="label label-purple clickable">
+      {{tag.tagName}}
+    </a>
+    </div>
+  </div>
+</div>
+
+

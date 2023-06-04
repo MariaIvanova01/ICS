@@ -12,7 +12,9 @@ import {ClarityModule} from "@clr/angular";
 import {FormsModule} from "@angular/forms";
 import {ReactiveFormsModule} from "@angular/forms";
 import {HttpService} from "./services/http-services.service";
-
+import '@cds/core/icon/register.js';
+/*import { ClarityIcons, searchIcon } from '@cds/core/icon';
+ClarityIcons.addIcons(searchIcon)*/
 
 @NgModule({
   declarations: [
@@ -29,7 +31,7 @@ import {HttpService} from "./services/http-services.service";
     BrowserAnimationsModule,
     ClarityModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   providers: [
     HttpService

@@ -1,5 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild, ElementRef} from '@angular/core';
 import {GalleryService} from "../services/gallery.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-gallery',
@@ -7,12 +8,45 @@ import {GalleryService} from "../services/gallery.service";
   styleUrls: ['./gallery.component.scss']
 })
 export class GalleryComponent implements OnInit{
-  constructor(private galleryService: GalleryService) {
+  images:Image[] = [];
+  /*searchTags: string[] = [];
+  @ViewChild('searchButton', { static: false }) searchButton: ElementRef;*/
+
+  constructor(private galleryService: GalleryService,
+              private router: Router) {
+  /*  this.searchButton = {} as ElementRef;*/
   }
   ngOnInit() {
     this.galleryService.getAllImages()
-      .subscribe(images=>{
-      console.log(images);
+      .subscribe((images: Image[])=>{
+        this.images = images;
     })
   }
+  openImage(image: Image){
+    this.router.navigateByUrl('/single-image-view',{ state: image});
+  }
+
+ /* tagSearch(){
+    console.log('Tag search clicked');
+    console.log(this.searchTags);
+    this.galleryService.getImageByTags(this.searchTags)
+      .subscribe((images: Image[])=> {
+        this.images = images;
+        console.log(this.images)
+      })
+  }*/
+}
+class Image{
+  imageURL: string;
+  tags: Tags[];
+
+  constructor(image: Image){
+    this.imageURL = image.imageURL;
+    this.tags = image.tags;
+  }
+}
+
+class Tags{
+  tagName: string = '';
+  tagAccuracy: number = 0;
 }

@@ -8,8 +8,10 @@ import {HttpService} from "./http-services.service";
 export class AnalyseService {
 
   constructor(private httpService: HttpService) { }
-  processImage(url: string,imageWidth: number, imageHeight:number): Observable<any>{
+
+  processImage(url: string | null | undefined, imageWidth: number, imageHeight: number): Observable<any>{
     console.log(url)
     return this.httpService.post('processImage', {imageURL: url, imageWidth: imageWidth,imageHeight:imageHeight})
   }
+
 }

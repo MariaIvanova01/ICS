@@ -2,6 +2,7 @@ package com.ICS.ImageClassifier.controllers;
 
 import com.ICS.ImageClassifier.exceptions.ApiException;
 import com.ICS.ImageClassifier.models.entities.ImageEntity;
+import com.ICS.ImageClassifier.models.entities.TagsEntity;
 import com.ICS.ImageClassifier.models.rest.models.Image;
 import com.ICS.ImageClassifier.models.rest.models.ImageRequest;
 import com.ICS.ImageClassifier.models.rest.models.Tags;
@@ -140,5 +141,32 @@ public class ImageController {
                     ).build());
         }
         return images;
+
     }
+    @GetMapping("/getImagesByTags")
+    public List<Image> getImagesByTags(@RequestParam("tags") List<String> tags) {
+        Iterable<ImageEntity> imageEntities = this.imageRepository.findAll();
+        List<ImageEntity> existingImages = new ArrayList<>();
+        for (ImageEntity imageEntity : imageEntities) {
+            for (TagsEntity tag : imageEntity.getTagsEntities()) {
+                if (tags.contains(tag.getTagName())) {
+                    existingImages.add(imageEntity);
+                }
+            }
+        }
+        List<Image> images = new ArrayList<>();
+        for (ImageEntity imageEntity: existingImages){
+            images.add(Image.builder()
+                    .imageURL(imageEntity.getImageUrl())
+                    .tags(imageEntity.getTagsEntities()
+                            .stream().map(tagsEntity -> Tags.builder()
+                                    .tagName(tagsEntity.getTagName())
+                                    .tagAccuracy(tagsEntity.getTagAccuracy())
+                                    .build()
+                            ).toList()
+                    ).build());
+        }
+        return images;
+    }
+
 }
