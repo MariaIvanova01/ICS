@@ -24,5 +24,4 @@ public class TagsEntity {
 
     @Column(name = "tags_accuracy", nullable = false)
     private float tagAccuracy;
-
 }

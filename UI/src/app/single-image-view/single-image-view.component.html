@@ -14,7 +14,13 @@
     <div id="imageTags">
       <a *ngFor="let tag of image['tags']" class="label label-purple clickable">
       {{tag.tagName}}
+        <p>{{tag['tagAccuracy']}}</p>
     </a>
+
+    </div>
+    <div id="date">
+      <h4>Analysed on:</h4>
+      <p>{{image['date']}}</p>
     </div>
   </div>
 </div>

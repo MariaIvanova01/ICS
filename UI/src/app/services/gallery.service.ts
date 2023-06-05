@@ -9,9 +9,9 @@ export class GalleryService {
 
   constructor(private httpService: HttpService) { }
   getAllImages(): Observable<any>{
-    return this.httpService.getAllImages('getAllImages')
+    return this.httpService.getAllImages('getAllImages');
   }
-  /*getImageByTags(tags: string[]):Observable<any>{
-    return this.httpService.getImageByTag('getImagesByTags',{tags})
-  }*/
+  getImageByTags(tags: string[]):Observable<any>{
+    return this.httpService.getImageByTag(tags);
+  }
 }

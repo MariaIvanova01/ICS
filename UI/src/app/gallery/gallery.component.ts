@@ -9,12 +9,12 @@ import {Router} from "@angular/router";
 })
 export class GalleryComponent implements OnInit{
   images:Image[] = [];
-  /*searchTags: string[] = [];
-  @ViewChild('searchButton', { static: false }) searchButton: ElementRef;*/
+  searchTags: string = '';
+  @ViewChild('searchButton', { static: false }) searchButton: ElementRef;
 
   constructor(private galleryService: GalleryService,
               private router: Router) {
-  /*  this.searchButton = {} as ElementRef;*/
+    this.searchButton = {} as ElementRef;
   }
   ngOnInit() {
     this.galleryService.getAllImages()
@@ -26,15 +26,14 @@ export class GalleryComponent implements OnInit{
     this.router.navigateByUrl('/single-image-view',{ state: image});
   }
 
- /* tagSearch(){
-    console.log('Tag search clicked');
-    console.log(this.searchTags);
-    this.galleryService.getImageByTags(this.searchTags)
+  tagSearch(){
+    let tagsArray: string[] = this.searchTags.split(", ");
+    this.galleryService.getImageByTags(tagsArray)
       .subscribe((images: Image[])=> {
         this.images = images;
         console.log(this.images)
       })
-  }*/
+  }
 }
 class Image{
   imageURL: string;

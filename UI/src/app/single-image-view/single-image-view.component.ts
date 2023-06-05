@@ -10,6 +10,7 @@ import {Router} from "@angular/router";
 
 export class SingleImageViewComponent{
   image;
+  tag: any;
   constructor(private singleImageService: SingleImageService,
               private router: Router) {
     this.image = this.router.getCurrentNavigation()?.extras?.state;
@@ -17,7 +18,7 @@ export class SingleImageViewComponent{
   submit() {
     this.singleImageService.getImageById()
       .subscribe(images=>{
-        console.log(images)
+        console.log(images);
       })
   }
 }

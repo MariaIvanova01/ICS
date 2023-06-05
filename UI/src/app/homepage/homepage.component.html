@@ -1,9 +1,18 @@
 <header class="header header-7,clr-row clr-justify-content-end">
+ <!-- <div class="header-actions">
+    <a href="javascript://" class="nav-link nav-icon-text">
+      <input type="checkbox" clrToggle (click)="toggleDarkTheme()" />
+      <span class="nav-text">Toggle Dark Theme</span>
+    </a>
+  </div>-->
+  <div class="header-actions ,clr-row clr-justify-content-end">
+  </div>
   <div class="header-nav">
     <a href="javascript://" class="nav-link nav-text" routerLink = "/homepage" routerLinkActive = "active">Analyse</a>
     <a href="javascript://" class="nav-link nav-text" routerLink = "/gallery" routerLinkActive="active">Gallery</a>
   </div>
 </header>
+
 <h1 class="clr-row clr-justify-content-center">Point an image to tag and add in gallery</h1>
 <form clrForm [formGroup]="imageForm" class="clr-row clr-justify-content-center">
   <clr-input-container>
@@ -11,4 +20,5 @@
   </clr-input-container>
   <button class="btn btn-primary clr-row clr-justify-content-center " type="submit" (click)="submit()">Analyse</button>
 </form>
+
 

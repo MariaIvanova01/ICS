@@ -15,8 +15,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,6 +52,7 @@ public class ImageController {
                                                 .tagAccuracy(tag.getTagAccuracy())
                                                 .build()
                                 ).toList())
+                                .date(existingImage.get().getSubmitDate())
                                 .build(),
                         HttpStatus.OK);
             }else {
@@ -70,6 +73,7 @@ public class ImageController {
                                                 .tagAccuracy(tag.getTagAccuracy())
                                                 .build()
                                 ).toList())
+                                .date(imageBuilder.getSubmitDate())
                                 .build(),
                         HttpStatus.OK
                 );
@@ -100,6 +104,7 @@ public class ImageController {
                                                 .tagAccuracy(tag.getTagAccuracy())
                                                 .build()
                                 ).toList())
+                                .date(existingImage.get().getSubmitDate())
                                 .build(),
                         HttpStatus.OK);
             }else {
@@ -132,6 +137,7 @@ public class ImageController {
         for (ImageEntity imageEntity : imageEntities) {
             images.add(Image.builder()
                     .imageURL(imageEntity.getImageUrl())
+                            .date(imageEntity.getSubmitDate())
                     .tags(imageEntity.getTagsEntities().stream().map(tagsEntity ->
                                     Tags.builder()
                                             .tagName(tagsEntity.getTagName())
@@ -148,16 +154,21 @@ public class ImageController {
         Iterable<ImageEntity> imageEntities = this.imageRepository.findAll();
         List<ImageEntity> existingImages = new ArrayList<>();
         for (ImageEntity imageEntity : imageEntities) {
-            for (TagsEntity tag : imageEntity.getTagsEntities()) {
-                if (tags.contains(tag.getTagName())) {
-                    existingImages.add(imageEntity);
-                }
+            List<String> imageAllTags = new ArrayList<>();
+
+            for (TagsEntity tag:imageEntity.getTagsEntities()) {
+                imageAllTags.add(tag.getTagName());
+            }
+
+            if(imageAllTags.containsAll(new HashSet<>(tags))){
+                existingImages.add(imageEntity);
             }
         }
         List<Image> images = new ArrayList<>();
         for (ImageEntity imageEntity: existingImages){
             images.add(Image.builder()
                     .imageURL(imageEntity.getImageUrl())
+                            .date(imageEntity.getSubmitDate())
                     .tags(imageEntity.getTagsEntities()
                             .stream().map(tagsEntity -> Tags.builder()
                                     .tagName(tagsEntity.getTagName())

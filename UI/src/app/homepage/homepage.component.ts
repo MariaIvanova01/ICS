@@ -3,7 +3,9 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {AnalyseService} from "../services/analyse.service";
 import { Router } from '@angular/router';
 import { tap } from 'rxjs/operators';
+/*import { runCssVarsPolyfill } from '@clr/core';
 
+const darkThemeStyleSheet = document.styleSheets.item(1);*/
 @Component({
   selector: 'app-homepage',
   templateUrl: './homepage.component.html',
@@ -11,13 +13,21 @@ import { tap } from 'rxjs/operators';
 })
 export class HomepageComponent{
   image: Image = new Image();
+ /* private darkThemeIsActive = true;*/
+
   imageForm = new FormGroup({
     imageUrl: new FormControl('', Validators.required),
-  });
+  })
+ /* toggleDarkTheme(ponyfill: any, config?: {}) {
+    toggleStylesheet(darkThemeStyleSheet, this.darkThemeIsActive = !this.darkThemeIsActive);
+    runCssVarsPolyfill(ponyfill, config);
+  }*/
   constructor(private analyseService: AnalyseService,
               private router: Router) {
   }
-
+  /*function toggleStylesheet(stylesheet: any, enable: boolean) {
+    darkThemeStyleSheet.disabled = !enable;
+  }*/
   submit(){
     const imageUrl = this.imageForm.get('imageUrl')?.value;
     console.log(imageUrl)
@@ -27,6 +37,7 @@ export class HomepageComponent{
         console.log(response);
         this.image.imageURL = imageUrl;
         this.image.tags = response.tags;
+        this.image.date = response.date;
       })
       )
       .subscribe(()=> {
@@ -40,6 +51,7 @@ export class HomepageComponent{
 class Image{
   imageURL: string | null | undefined ='';
   tags: Tags[] = [];
+  date: string = '';
 
 }
 

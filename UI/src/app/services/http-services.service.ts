@@ -1,4 +1,4 @@
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {catchError, EMPTY, Observable} from "rxjs";
 
@@ -25,13 +25,17 @@ export class HttpService {
       }));
   }
 
- /* getImageByTag<T>(url: string, params: { }): Observable<T>{
-    console.log(params);
-    return this.http.get<T>(this.apiUrl + url + params)
+  getImageByTag<T>(params: string[]): Observable<T>{
+    let queryParams = new HttpParams();
+    for (let i = 0; i < params.length; i++) {
+      queryParams = queryParams.append("tags", params[i]);
+    }
+
+    return this.http.get<T>(this.apiUrl + 'getImagesByTags', {params: queryParams})
       .pipe(catchError((response: HttpErrorResponse)=>{
         return EMPTY; //eventually error in popup
       }));
-  }*/
+  }
   post<T>(url: string, data: any): Observable<T>{
     return this.http.post<T>(this.apiUrl + url, data)
     .pipe(catchError((response: HttpErrorResponse)=>{

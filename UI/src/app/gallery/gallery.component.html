@@ -1,10 +1,10 @@
 <header class="header header-7, clr-row clr-justify-content-end">
- <!-- <form class="search">
-    <input id="search_input" type="text" placeholder="Search..." name="searchInput" [(ngModel)]="searchTags">
+  <form class="search">
+    <input id="search_input" type="text" placeholder="Search..." name="searchInput" (keyup.enter)="tagSearch()" [(ngModel)]="searchTags">
     <button type="button" class="btn btn-icon" aria-label="home" (click)="tagSearch()" #searchButton>
       <cds-icon shape="search"></cds-icon>
     </button>
-  </form>-->
+  </form>
   <div class="header-nav">
     <a href="javascript://" class="nav-link nav-text" routerLink = "/homepage" routerLinkActive = "active">Analyse</a>
     <a href="javascript://" class="nav-link nav-text" routerLink = "/gallery" routerLinkActive="active">Gallery</a>
