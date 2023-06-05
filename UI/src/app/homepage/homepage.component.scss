@@ -27,4 +27,10 @@ button{
   background-color: $buttonColors !important;
 
 }
-
+.content-area{
+  width: 40vh;
+  display: inline;
+}
+span.error-message\,.alert-text{
+  color: red !important;
+}

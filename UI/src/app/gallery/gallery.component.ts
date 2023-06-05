@@ -41,12 +41,6 @@ export class GalleryComponent implements OnInit{
   }
   tagSearch(){
     this.router.navigate(['/gallery'], { queryParams: { searchTags: this.searchTags } });
-    /*let tagsArray: string[] = this.searchTags.split(", ");
-    this.galleryService.getImageByTags(tagsArray)
-      .subscribe((images: Image[])=> {
-        this.images = images;
-        console.log(this.images)
-      })*/
   }
 }
 class Image{

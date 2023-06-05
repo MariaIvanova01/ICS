@@ -13,12 +13,30 @@
   </div>
 </header>
 
+<div  *ngIf="error" class="content-area ">
+  <div class="alert alert-danger  " role="alert">
+    <div class="alert-items ">
+      <div class="alert-item static ">
+        <div class="alert-icon-wrapper">
+          <cds-icon class="alert-icon" shape="exclamation-circle"></cds-icon>
+        </div>
+        <span class="error-message, alert-text">
+            {{ error }}
+          </span>
+      </div>
+    </div>
+  </div>
+</div>
 <h1 class="clr-row clr-justify-content-center">Point an image to tag and add in gallery</h1>
+
+
 <form clrForm [formGroup]="imageForm" class="clr-row clr-justify-content-center">
   <clr-input-container>
     <input clrInput placeholder="Add an image URL to analyse" type="text" formControlName="imageUrl" />
   </clr-input-container>
-  <button class="btn btn-primary clr-row clr-justify-content-center " type="submit" (click)="submit()">Analyse</button>
+  <button class="btn btn-primary clr-row clr-justify-content-center " type="submit" (click)="submit()"  [disabled]="processing">
+  <span *ngIf="!processing">Analyse</span>
+  <span *ngIf="processing">Processing...</span>
+  </button>
 </form>
-
 
