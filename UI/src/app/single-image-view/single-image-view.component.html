@@ -12,7 +12,7 @@
   </div>
   <div class="clr-col-lg-6 clr-col-12">
     <div id="imageTags">
-      <a *ngFor="let tag of image['tags']" class="label label-purple clickable">
+      <a *ngFor="let tag of image['tags']" (click)="sendTagToSearch(tag.tagName)" class="label label-purple clickable">
       {{tag.tagName}}
         <p>{{tag['tagAccuracy']}}</p>
     </a>

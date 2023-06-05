@@ -10,10 +10,12 @@ import {Router} from "@angular/router";
 
 export class SingleImageViewComponent{
   image;
-  tag: any;
   constructor(private singleImageService: SingleImageService,
               private router: Router) {
     this.image = this.router.getCurrentNavigation()?.extras?.state;
+  }
+  sendTagToSearch(tag: string) {
+    this.router.navigate(['/gallery'], { queryParams: { searchTags: tag } });
   }
   submit() {
     this.singleImageService.getImageById()

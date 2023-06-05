@@ -30,7 +30,6 @@ export class HomepageComponent{
   }*/
   submit(){
     const imageUrl = this.imageForm.get('imageUrl')?.value;
-    console.log(imageUrl)
     this.analyseService.processImage(imageUrl, 200,200)
       .pipe(
       tap(response =>{
